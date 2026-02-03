@@ -1,19 +1,7 @@
-# Admin Authentication Improvement Tasks
+# Admin Dashboard UI Improvements TODO
 
-## 1. Update /admin-login route in app.py
-- [ ] Check if data/admin.json exists; if not, redirect to /admin-register
-- [ ] If exists, load credentials and validate against form input
-- [ ] Remove fixed credentials logic
-
-## 2. Add new /admin-register route in app.py
-- [ ] Handle GET: render admin_register.html
-- [ ] Handle POST: save username/password to data/admin.json (only if not exists)
-
-## 3. Create templates/admin_register.html
-- [ ] Form with username and password fields
-- [ ] Submit to /admin-register POST
-
-## 4. Test the flow
-- [ ] First access to /admin-login redirects to /admin-register
-- [ ] Set credentials, then login works
-- [ ] Existing admin features remain functional
+## Tasks
+- [x] Add .admin-btn CSS class to static/css/style.css (orange pill button style matching navbar)
+- [x] Update "View Order History" link in templates/admin_dashboard.html to use class="admin-btn"
+- [x] Update "Mark Completed" links in templates/admin_dashboard.html to use class="admin-btn complete-btn"
+- [x] Add inline JavaScript for fade-out animation on "Mark Completed" click in templates/admin_dashboard.html

@@ -25,11 +25,11 @@
             <tbody>
                 {% for order in history %}
                 <tr>
-                    <td>{{ order.order_id }}</td>
-                    <td>{{ order.table_no }}</td>
-                    <td>{% for item in order.items %}{{ item.name }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
-                    <td>₹{{ order.total }}</td>
-                    <td>{{ order.date_time }}</td>
+                    <td>{{ order["id"] }}</td>
+                    <td>{{ order["table"] }}</td>
+                    <td>{% for item in order["order_items"] %}{{ item["name"] }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td>₹{{ order["total"] }}</td>
+                    <td>{{ order["date_time"] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

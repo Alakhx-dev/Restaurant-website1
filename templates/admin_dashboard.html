@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Admin Dashboard</h1>
-        <a href="/admin/history">View Order History</a>
+        <a href="/admin/history" class="admin-btn">View Order History</a>
         <h2>Active Orders</h2>
         <table>
             <thead>
@@ -23,18 +23,36 @@
             </thead>
             <tbody>
                 {% for order in orders %}
-                <tr>
+                <tr class="order-row">
                     <td>{{ order['id'] }}</td>
                     <td>{{ order['table'] }}</td>
                     <td>{% for item in order['order_items'] %}{{ item['name'] }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
                     <td>₹{{ order['total'] }}</td>
                     <td>
-                        <a href="/admin/complete/{{ order['id'] }}">Mark Completed</a>
+                        <form method="POST" action="/admin/complete/{{ order['id'] }}">
+                            <button type="submit" class="admin-btn complete-btn">
+                                Mark Completed
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    <script>
+    function completeOrder(el) {
+        const row = el.closest(".order-row");
+        row.style.transition = "opacity 0.4s ease";
+        row.style.opacity = "0";
+
+        setTimeout(() => {
+            row.remove();   // removes row permanently from dashboard UI
+            window.location.href = el.href; // backend completion still happens
+        }, 400);
+
+        return false;
+    }
+    </script>
 </body>
 </html>

@@ -9,6 +9,9 @@ import uuid
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Change this in production
 
+ORDERS_FILE = 'data/orders.json'
+HISTORY_FILE = 'data/history.json'
+
 # Menu data: Strictly vegetarian, categorized
 menu = {
     'BREAKFAST': [
@@ -52,6 +55,17 @@ def save_json(file, data):
 # Load data
 orders = load_json('data/orders.json')
 completed_orders = load_json('data/history.json')
+
+def normalize_order(order):
+    return {
+        'id': order.get('id') or order.get('order_id'),
+        'table': order.get('table') or order.get('table_no'),
+        'order_items': order.get('order_items') or order.get('items') or [],
+        'total': order.get('total', 0),
+        'user': order.get('user'),
+        'payment': order.get('payment'),
+        'date_time': order.get('date_time')
+    }
 
 @app.route('/')
 def home():
@@ -202,7 +216,9 @@ def place_order():
     session['order'] = order
     orders.append(order)
     save_json('data/orders.json', orders)
-    return jsonify({'order_id': order_id})
+    # ✅ Clear cart after successful order
+    session.pop("cart", None)
+    return redirect(url_for("bill", order_id=order["id"]))
 
 @app.route('/bill/<order_id>')
 def bill(order_id):
@@ -251,27 +267,34 @@ def admin_login():
 def admin_dashboard():
     if 'admin' not in session:
         return redirect(url_for('admin_login'))
-    return render_template('admin_dashboard.html', orders=orders)
+    orders_normalized = [normalize_order(o) for o in load_json('data/orders.json')]
+    return render_template('admin_dashboard.html', orders=orders_normalized)
 
 @app.route('/admin/complete/<order_id>', methods=['POST'])
 def complete_order(order_id):
     if 'admin' not in session:
         return redirect(url_for('admin_login'))
+    orders = load_json(ORDERS_FILE)
+    history = load_json(HISTORY_FILE)
+
     for i, order in enumerate(orders):
-        if order.get("id") == order_id:
-            completed_orders.append(order)
+        if order["id"] == order_id:
+            history.append(order)
             orders.pop(i)
-            save_json('data/orders.json', orders)
-            save_json('data/history.json', completed_orders)
             break
-    return redirect(url_for('admin_dashboard'))
+
+    save_json(ORDERS_FILE, orders)
+    save_json(HISTORY_FILE, history)
+
+    return redirect("/admin")
 
 @app.route('/admin/history')
 def admin_history():
     if 'admin' not in session:
         return redirect(url_for('admin_login'))
+    history_normalized = [normalize_order(o) for o in load_json(HISTORY_FILE)]
     today = datetime.now().strftime('%Y-%m-%d')
-    today_orders = [o for o in completed_orders if o['date_time'].startswith(today)]
+    today_orders = [o for o in history_normalized if o['date_time'].startswith(today)]
     total_revenue = sum(o['total'] for o in today_orders)
     return render_template('admin_history.html', history=today_orders, total_revenue=total_revenue)
 

@@ -85,6 +85,88 @@ header {
     right: -10px;
 }
 
+.main-nav a {
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.main-nav a:hover {
+    background: var(--accent);
+}
+
+.admin-btn {
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+    display: inline-block;
+}
+
+.admin-btn:hover {
+    background: var(--accent);
+}
+
+.settings-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.settings-btn {
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.settings-btn:hover {
+    background: var(--accent);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(11,37,48,0.06);
+    z-index: 1000;
+    min-width: 120px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.dropdown-menu a:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.settings-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
 .container {
     max-width: 1200px;
     margin: 86px auto 24px;
@@ -362,6 +444,8 @@ h1, h2 {
     z-index: 1001;
     transform: translateX(110%);
     visibility: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .cart-sidebar.active {
@@ -376,14 +460,22 @@ h1, h2 {
     padding: 22px;
     width: 380px;
     height: 100vh;
-    overflow-y: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .cart-container {
     display: flex;
     flex-direction: column;
+    height: 100%;
     gap: 18px;
+}
+
+.cart-items-section {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 120px;
 }
 
 .cart-items-section h2 {
@@ -476,6 +568,10 @@ h1, h2 {
 }
 
 .cart-summary-section {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
