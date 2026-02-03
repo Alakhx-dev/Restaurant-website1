@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiv Shambhu Hotel - Bill</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @media print {
+            body { font-size: 12px; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container bill">
+        <h1>Shiv Shambhu Hotel</h1>
+        <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+        <p><strong>Table No:</strong> {{ order.table_no }}</p>
+        <p><strong>Date/Time:</strong> {{ order.date_time }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order['items'] %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>₹{{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p><strong>Grand Total: ₹{{ order.total }}</strong></p>
+        <p><strong>Payment Status:</strong> {{ order.payment }}</p>
+        <button class="no-print" onclick="window.print()">Print Bill</button>
+    </div>
+    <script>window.onload = function() { window.print(); }</script>
+</body>
+</html>

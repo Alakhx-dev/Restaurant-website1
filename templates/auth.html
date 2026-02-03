@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiv Shambhu Hotel - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main class="auth-page">
+        <section class="auth-card">
+            <div class="auth-brand">
+                <div class="logo-circle">🕉️</div>
+                <div>
+                    <h1>Shiv Shambhu</h1>
+                    <p class="muted">Welcome — please sign in or create an account</p>
+                </div>
+            </div>
+
+            <div class="auth-tabs" role="tablist" aria-label="Authentication Tabs">
+                <button id="tab-login" class="tab active" aria-controls="panel-login">Login</button>
+                <button id="tab-signup" class="tab" aria-controls="panel-signup">Sign up</button>
+                <a href="/admin-login" class="tab admin-tab">Admin Login</a>
+            </div>
+
+            <div id="panel-login" class="auth-panel" role="tabpanel">
+                <form action="/login" method="post" class="form" novalidate>
+                    <label for="login-username">Username</label>
+                    <input id="login-username" type="text" name="username" placeholder="e.g. john_doe" required>
+
+                    <label for="login-password">Password</label>
+                    <div class="password-row">
+                        <input id="login-password" type="password" name="password" placeholder="Your password" required>
+                        <button type="button" class="show-pass" data-target="login-password">Show</button>
+                    </div>
+
+                    <button type="submit" class="btn primary">Sign in</button>
+                    <div class="form-actions">
+                        <button type="button" class="btn ghost" id="guest-btn">Guest login</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="panel-signup" class="auth-panel" role="tabpanel" hidden>
+                <form action="/signup" method="post" class="form" novalidate>
+                    <label for="signup-username">Choose a username</label>
+                    <input id="signup-username" type="text" name="username" placeholder="username" required>
+
+                    <label for="signup-password">Create password</label>
+                    <div class="password-row">
+                        <input id="signup-password" type="password" name="password" placeholder="At least 6 characters" required>
+                        <button type="button" class="show-pass" data-target="signup-password">Show</button>
+                    </div>
+
+                    <button type="submit" class="btn primary">Create account</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Tab switching
+        (function(){
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const panelLogin = document.getElementById('panel-login');
+            const panelSignup = document.getElementById('panel-signup');
+
+            function activate(tab){
+                if(tab === 'login'){
+                    tabLogin.classList.add('active'); tabSignup.classList.remove('active');
+                    panelLogin.hidden = false; panelSignup.hidden = true;
+                } else {
+                    tabLogin.classList.remove('active'); tabSignup.classList.add('active');
+                    panelLogin.hidden = true; panelSignup.hidden = false;
+                }
+            }
+            tabLogin.addEventListener('click', ()=>activate('login'));
+            tabSignup.addEventListener('click', ()=>activate('signup'));
+
+            // show/hide password
+            document.querySelectorAll('.show-pass').forEach(btn => {
+                btn.addEventListener('click', function(){
+                    const id = this.getAttribute('data-target');
+                    const input = document.getElementById(id);
+                    if(!input) return;
+                    if(input.type === 'password') { input.type = 'text'; this.textContent = 'Hide'; }
+                    else { input.type = 'password'; this.textContent = 'Show'; }
+                });
+            });
+            // Guest login flow: prompt for name then POST to /guest
+            const guestBtn = document.getElementById('guest-btn');
+            if (guestBtn) {
+                guestBtn.addEventListener('click', function(){
+                    const name = prompt('Enter name for guest (or leave blank for auto-generated):');
+                    fetch('/guest', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name })
+                    })
+                    .then(r => r.json())
+                    .then(resp => {
+                        if (resp && resp.redirect) {
+                            window.location.href = resp.redirect;
+                        } else {
+                            window.location.href = '/menu';
+                        }
+                    })
+                    .catch(err => { console.error(err); window.location.href = '/menu'; });
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

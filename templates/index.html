@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiv Shambhu Hotel - Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="icon">🕉️</span>
+                <div>
+                    <h1>Shiv Shambhu Hotel</h1>
+                    <p>Godavari Complex, Kopargaon 423601</p>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <a href="/menu">Menu</a>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact Us</a>
+            </nav>
+            <div class="cart-icon" id="cart-icon" onclick="openCart()">
+                🛒 <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+    <div class="container" id="menu-container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Delicious Food Delivered Fresh</h1>
+                    <p>Experience authentic flavors crafted with love and tradition.</p>
+                    <button class="cta-button">Explore Menu</button>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop" alt="Delicious Food">
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Row -->
+        <div class="categories">
+            <div class="category-icon" data-category="BREAKFAST">
+                <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <ellipse cx="12" cy="12" rx="7" ry="5.5" stroke="currentColor" stroke-width="1.4" fill="none" />
+                    <ellipse cx="12" cy="11.5" rx="3" ry="2" fill="currentColor" opacity="0.15" />
+                </svg>
+                <span class="category-label">Breakfast</span>
+            </div>
+            <div class="category-icon" data-category="LUNCH">
+                <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M3 13c2 3 6 4 9 4s7-1 9-4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                    <path d="M6 11v-2a2 2 0 012-2h8a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                </svg>
+                <span class="category-label">Lunch</span>
+            </div>
+            <div class="category-icon" data-category="BEVERAGES">
+                <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M6 4h12l-1 12a3 3 0 01-3 3H10a3 3 0 01-3-3L6 4z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 8h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                <span class="category-label">Beverages</span>
+            </div>
+            <div class="category-icon" data-category="DINNER">
+                <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M8 3v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M10 3v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M16 6l4 3-4 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="category-label">Dinner</span>
+            </div>
+        </div>
+
+<h2>Welcome, {{ user }}</h2>
+{% for category in ['BREAKFAST', 'LUNCH', 'BEVERAGES', 'DINNER'] %}
+{% set items = menu[category] %}
+<div class="menu-category">
+    <h3>{{ category }}</h3>
+    <div class="menu-grid">
+        {% for item in items %}
+        <div class="menu-card">
+            <img src="{% if item.name == 'Mango Lassi' %}https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDrkRYgmdd0TE6Xxc_gwme42C8oFVxORXXOQ&s{% else %}{{ item.image }}{% endif %}" alt="{{ item.name }}">
+            <h4>{{ item.name }}</h4>
+            <p>₹{{ item.price }}</p>
+            <button class="add-btn" data-name="{{ item.name }}" data-price="{{ item.price }}">Add +</button>
+        </div>
+        {% endfor %}
+        {% if category == 'BEVERAGES' %}
+        <div class="menu-card">
+            <img src="https://www.milkmaid.in/sites/default/files/2024-05/Cold-Coffee-335x300.jpg" alt="Cold Coffee">
+            <h4>Cold Coffee</h4>
+            <p>₹60</p>
+            <button class="add-btn" data-name="Cold Coffee" data-price="60">Add +</button>
+        </div>
+        <div class="menu-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE2coco7HaGVd--V5BI0Ql1mD8hI1sJui-rw&s" alt="Sweet Lassi">
+            <h4>Sweet Lassi</h4>
+            <p>₹50</p>
+            <button class="add-btn" data-name="Sweet Lassi" data-price="50">Add +</button>
+        </div>
+        <div class="menu-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvQkXHbqVD1iOyLV-xkRw1H7QWiiqs5qfXbw&s" alt="Fresh Lemon Soda">
+            <h4>Fresh Lemon Soda</h4>
+            <p>₹40</p>
+            <button class="add-btn" data-name="Fresh Lemon Soda" data-price="40">Add +</button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+    </div>
+    <div class="checkout-section" id="checkout-section" style="display: none;">
+        <div class="container">
+            <h1>Checkout</h1>
+            <div class="checkout-form">
+                <h2>Your Order</h2>
+                <ul id="checkout-cart-list"></ul>
+                <p><strong>Total: ₹<span id="checkout-total">0</span></strong></p>
+                <form action="/checkout" method="post">
+                    <label for="table_no">Table Number:</label>
+                    <select name="table_no" id="table_no" required>
+                        {% for i in range(1, 11) %}
+                        <option value="{{ i }}">Table {{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <label>Payment Method:</label>
+                    <input type="radio" name="payment" value="Cash" required> Cash
+                    <input type="radio" name="payment" value="UPI" required> UPI
+                    <div id="qr-code" style="display: none;">
+                        <img src="{{ url_for('static', filename='images/Qr.jpeg') }}" alt="UPI QR Code" onerror="this.style.display='none'; document.getElementById('qr-placeholder').style.display='block';">
+                        <p id="qr-placeholder" style="display: none;">QR Code placeholder - replace with actual UPI QR code image.</p>
+                    </div>
+                    <!-- hidden inputs populated by JS when proceeding to checkout -->
+                    <input type="hidden" id="cart-data" name="cart_data" value="">
+                    <input type="hidden" id="total-data" name="total_data" value="">
+                    <button type="button" onclick="submitOrder()">Done</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-page">
+            <div class="cart-container">
+                <div class="cart-items-section">
+                    <h2>Your Cart</h2>
+                    <div id="cart-list"></div>
+                </div>
+                <div class="cart-summary-section">
+                    <div class="order-summary-card">
+                        <h2>Order Summary</h2>
+                        <div class="summary-line"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+                        <div class="summary-line"><span>Shipping</span><span>Free</span></div>
+                        <div class="summary-line"><span>Tax</span><span id="tax">₹0</span></div>
+                        <div class="summary-line total-line"><span>Total</span><span id="total">₹0</span></div>
+                        <button id="checkout-btn" onclick="proceedToCheckout()" style="display: none;" class="checkout-btn">Secure Checkout</button>
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeCart()" class="close-cart-btn">×</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+

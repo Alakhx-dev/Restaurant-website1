@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Shiv Shambhu Hotel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Order History</h1>
+        <a href="/admin">Back to Dashboard</a>
+        <h2>Completed Orders Today</h2>
+        <p>Total Revenue: ₹{{ total_revenue }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Table No</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Date Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in history %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.table_no }}</td>
+                    <td>{% for item in order.items %}{{ item.name }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td>₹{{ order.total }}</td>
+                    <td>{{ order.date_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiv Shambhu Hotel - Checkout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="payment-body">
+    <div class="payment-page">
+        <div class="payment-card">
+            <h2>Checkout</h2>
+            <div class="order-summary">
+                <h3>Your Order</h3>
+                <div class="order-items">
+                    {% for item in cart %}
+                    <div class="order-item">
+                        <span class="item-name">{{ item.name }}</span>
+                        <span class="item-price">₹{{ item.price }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="order-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount">₹{{ cart|sum(attribute='price') }}</span>
+                </div>
+            </div>
+            <form action="/checkout" method="post" class="checkout-form">
+                <div class="form-group">
+                    <label for="table_no">Table Number:</label>
+                    <select name="table_no" id="table_no" required>
+                        {% for i in range(1, 11) %}
+                        <option value="{{ i }}">Table {{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="payment-options">
+                    <label>Payment Method:</label>
+                    <div class="payment-option" data-value="Cash">
+                        <input type="radio" name="payment" value="Cash" required>
+                        <label>Cash Payment</label>
+                        <span class="checkmark">✓</span>
+                    </div>
+                    <div class="payment-option" data-value="UPI">
+                        <input type="radio" name="payment" value="UPI" required>
+                        <label>UPI Payment</label>
+                        <span class="checkmark">✓</span>
+                    </div>
+                </div>
+                <div id="qr-code" style="display: none;">
+                    <img src="{{ url_for('static', filename='images/Qr.jpeg') }}" alt="UPI QR Code" onerror="this.style.display='none'; document.getElementById('qr-placeholder').style.display='block';">
+                    <p id="qr-placeholder" style="display: none;">QR Code placeholder - replace with actual UPI QR code image.</p>
+                </div>
+                <button type="submit" class="confirm-payment-btn">Confirm Payment</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Make payment options clickable
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                radio.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // Handle payment method change
+        document.querySelectorAll('input[name="payment"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Update visual selection
+                document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                this.closest('.payment-option').classList.add('selected');
+
+                // Handle QR code display
+                const qrCode = document.getElementById('qr-code');
+                if (this.value === 'UPI') {
+                    qrCode.style.display = 'block';
+                } else {
+                    qrCode.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiv Shambhu Hotel - Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Shiv Shambhu Mini Hotel - Admin Panel - Orders</h1>
+
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <p>{{ orders|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <p>₹{% set total = 0 %}{% for order in orders %}{% set total = total + order.total %}{% endfor %}{{ total }}</p>
+            </div>
+        </div>
+
+        <table class="admin">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Table No</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.user }}</td>
+                    <td>{{ order.table_no }}</td>
+                    <td>{% for item in order.items %}{{ item.name }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td>₹{{ order.total }}</td>
+                    <td>{{ order.payment }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

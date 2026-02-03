@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Shiv Shambhu Hotel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <a href="/admin/history">View Order History</a>
+        <h2>Active Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Table No</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order['id'] }}</td>
+                    <td>{{ order['table'] }}</td>
+                    <td>{% for item in order['order_items'] %}{{ item['name'] }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
+                    <td>₹{{ order['total'] }}</td>
+                    <td>
+                        <a href="/admin/complete/{{ order['id'] }}">Mark Completed</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

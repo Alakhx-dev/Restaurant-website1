@@ -1,0 +1,1 @@
+Placeholder for QR Code Image. Replace this file with qr_code.png containing the actual UPI QR code.
