@@ -9,8 +9,10 @@
 <body>
     <div class="container">
         <h1>Order History</h1>
-        <a href="/admin">Back to Dashboard</a>
+        <a href="/admin" class="admin-btn">Back to Dashboard</a>
         <h2>Completed Orders Today</h2>
+        <p>Cash Revenue: ₹{{ cash_revenue }}</p>
+        <p>UPI Revenue: ₹{{ upi_revenue }}</p>
         <p>Total Revenue: ₹{{ total_revenue }}</p>
         <table>
             <thead>

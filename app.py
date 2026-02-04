@@ -53,18 +53,24 @@ def save_json(file, data):
         json.dump(data, f, indent=4)
 
 # Load data
-orders = load_json('data/orders.json')
 completed_orders = load_json('data/history.json')
 
 def normalize_order(order):
+    order["date_time"] = order.get("date_time") or order.get("timestamp") or ""
+    order["payment_method"] = (
+        order.get("payment_method")
+        or order.get("payment")
+        or order.get("method")
+        or "Cash"
+    ).lower()
     return {
         'id': order.get('id') or order.get('order_id'),
         'table': order.get('table') or order.get('table_no'),
         'order_items': order.get('order_items') or order.get('items') or [],
         'total': order.get('total', 0),
         'user': order.get('user'),
-        'payment': order.get('payment'),
-        'date_time': order.get('date_time')
+        'payment_method': order["payment_method"],
+        'date_time': order["date_time"]
     }
 
 @app.route('/')
@@ -187,13 +193,14 @@ def checkout():
             'payment': payment,
             'date_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
+        orders = load_json('data/orders.json')
         orders.append(order)
         save_json('data/orders.json', orders)
         # persist this order in session
         session['order'] = order
         session.pop('cart', None)
-        # redirect user back to menu/home after successful payment
-        return redirect(url_for('menu_page'))
+        # redirect to bill page after order creation
+        return redirect(url_for('bill', order_id=order_id))
     return render_template('checkout.html', cart=session.get('cart', []))
 
 @app.route('/place_order', methods=['POST'])
@@ -214,16 +221,21 @@ def place_order():
         'date_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
     session['order'] = order
+    orders = load_json('data/orders.json')
     orders.append(order)
     save_json('data/orders.json', orders)
     # ✅ Clear cart after successful order
     session.pop("cart", None)
-    return redirect(url_for("bill", order_id=order["id"]))
+    return jsonify({
+        "success": True,
+        "order_id": order_id
+    })
 
 @app.route('/bill/<order_id>')
 def bill(order_id):
-    order = session.get('order')
-    if not order or order['order_id'] != order_id:
+    orders = load_json("data/orders.json")
+    order = next((o for o in orders if o["id"] == order_id), None)
+    if not order:
         return 'Order not found', 404
     return render_template('bill.html', order=order)
 
@@ -270,23 +282,28 @@ def admin_dashboard():
     orders_normalized = [normalize_order(o) for o in load_json('data/orders.json')]
     return render_template('admin_dashboard.html', orders=orders_normalized)
 
-@app.route('/admin/complete/<order_id>', methods=['POST'])
+@app.route('/admin/complete/<order_id>', methods=['GET', 'POST'])
 def complete_order(order_id):
     if 'admin' not in session:
         return redirect(url_for('admin_login'))
-    orders = load_json(ORDERS_FILE)
-    history = load_json(HISTORY_FILE)
+    orders = load_json("data/orders.json")
 
-    for i, order in enumerate(orders):
-        if order["id"] == order_id:
-            history.append(order)
-            orders.pop(i)
+    order_to_complete = None
+    for o in orders:
+        oid = o.get("id") or o.get("order_id")
+        if oid == order_id:
+            order_to_complete = o
             break
 
-    save_json(ORDERS_FILE, orders)
-    save_json(HISTORY_FILE, history)
+    if order_to_complete:
+        orders.remove(order_to_complete)
+        save_json("data/orders.json", orders)
 
-    return redirect("/admin")
+        history = load_json("data/history.json")
+        history.append(order_to_complete)
+        save_json("data/history.json", history)
+
+    return redirect(url_for("admin_dashboard"))
 
 @app.route('/admin/history')
 def admin_history():
@@ -294,9 +311,14 @@ def admin_history():
         return redirect(url_for('admin_login'))
     history_normalized = [normalize_order(o) for o in load_json(HISTORY_FILE)]
     today = datetime.now().strftime('%Y-%m-%d')
-    today_orders = [o for o in history_normalized if o['date_time'].startswith(today)]
-    total_revenue = sum(o['total'] for o in today_orders)
-    return render_template('admin_history.html', history=today_orders, total_revenue=total_revenue)
+    today_orders = [
+        o for o in history_normalized
+        if o.get("date_time") and o["date_time"].startswith(today)
+    ]
+    cash_total = sum(o['total'] for o in today_orders if o['payment_method'] == 'cash')
+    upi_total = sum(o['total'] for o in today_orders if o['payment_method'] == 'upi')
+    total_revenue = cash_total + upi_total
+    return render_template('admin_history.html', history=today_orders, total_revenue=total_revenue, cash_revenue=cash_total, upi_revenue=upi_total)
 
 @app.route('/admin-logout')
 def admin_logout():
