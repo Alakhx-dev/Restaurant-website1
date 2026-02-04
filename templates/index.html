@@ -168,6 +168,15 @@
             <button onclick="closeCart()" class="close-cart-btn">×</button>
         </div>
     </div>
+    <div id="success-modal" class="success-modal" aria-hidden="true">
+        <div class="success-modal-content" role="dialog" aria-modal="true" aria-labelledby="success-title">
+            <button type="button" class="success-close" id="success-close" aria-label="Close">x</button>
+            <div class="success-icon">✓</div>
+            <h3 id="success-title">Order Successfully Placed!</h3>
+            <p class="success-subtext">Order ID: <span id="success-order-id">--</span></p>
+            <button type="button" class="download-bill-btn" id="download-bill-btn">Download Bill</button>
+        </div>
+    </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

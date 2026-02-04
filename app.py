@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, send_file
 import random
 import string
 from datetime import datetime, timedelta
 import json
 import os
 import uuid
+import io
+from fpdf import FPDF
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Change this in production
@@ -238,6 +240,51 @@ def bill(order_id):
     if not order:
         return 'Order not found', 404
     return render_template('bill.html', order=order)
+
+@app.route('/generate_bill/<order_id>')
+def generate_bill(order_id):
+    orders = load_json("data/orders.json")
+    order = next((o for o in orders if o.get("id") == order_id), None)
+    if not order:
+        return 'Order not found', 404
+
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=12)
+    pdf.add_page()
+
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.cell(0, 10, "Shiv Shambhu Hotel - Godavari Complex, Kopargaon", ln=True, align="C")
+    pdf.ln(4)
+
+    pdf.set_font("Helvetica", "", 12)
+    pdf.cell(0, 8, f"Order ID: {order.get('id', '')}", ln=True)
+    pdf.cell(0, 8, f"Table Number: {order.get('table', '')}", ln=True)
+    pdf.cell(0, 8, f"Payment Method: {order.get('payment', '')}", ln=True)
+    pdf.ln(4)
+
+    pdf.set_font("Helvetica", "B", 12)
+    pdf.cell(120, 8, "Item Name", border=1)
+    pdf.cell(50, 8, "Price", border=1, ln=True)
+
+    pdf.set_font("Helvetica", "", 12)
+    items = order.get("order_items", [])
+    for item in items:
+        name = item.get("name", "")
+        price = item.get("price", 0)
+        pdf.cell(120, 8, str(name), border=1)
+        pdf.cell(50, 8, f"Rs {price}", border=1, ln=True)
+
+    pdf.ln(4)
+    pdf.set_font("Helvetica", "B", 12)
+    pdf.cell(0, 8, f"Total Amount Paid: Rs {order.get('total', 0)}", ln=True)
+
+    pdf_bytes = pdf.output(dest="S").encode("latin-1")
+    return send_file(
+        io.BytesIO(pdf_bytes),
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name="Shiv_Shambhu_Bill.pdf"
+    )
 
 @app.route('/about')
 def about():

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCart();
     setupCategoryFilters();
     setupCTAButton();
+    setupSuccessModal();
     const cartIcon = document.getElementById('cart-icon');
     if (cartIcon) cartIcon.addEventListener('click', openCart);
 
@@ -30,6 +31,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function setupSuccessModal() {
+    const modal = document.getElementById('success-modal');
+    if (!modal) return;
+
+    const closeBtn = document.getElementById('success-close');
+    const downloadBtn = document.getElementById('download-bill-btn');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSuccessModal);
+    }
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeSuccessModal();
+        }
+    });
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            const orderId = downloadBtn.getAttribute('data-order-id');
+            if (orderId) {
+                window.location.href = `/generate_bill/${orderId}`;
+            }
+        });
+    }
+}
+
+function openSuccessModal(orderId) {
+    const modal = document.getElementById('success-modal');
+    const orderIdEl = document.getElementById('success-order-id');
+    const downloadBtn = document.getElementById('download-bill-btn');
+    if (!modal) return;
+
+    if (orderIdEl) orderIdEl.textContent = orderId;
+    if (downloadBtn) downloadBtn.setAttribute('data-order-id', orderId);
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeSuccessModal() {
+    const modal = document.getElementById('success-modal');
+    if (!modal) return;
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+}
 
 function addToCart(name, price) {
     fetch('/add_to_cart', {
@@ -228,9 +275,8 @@ function submitOrder() {
     .then(response => response.json())
     .then(data => {
         if (data.order_id) {
-            alert('Order placed — ID: ' + data.order_id);
-            // go back to menu/home
-            window.location.href = '/menu';
+            openSuccessModal(data.order_id);
+            loadCart();
         } else {
             alert('Error submitting order');
         }
