@@ -1,3 +1,5 @@
+
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -100,18 +102,20 @@ header {
 }
 
 .admin-btn {
-    background: var(--primary);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.3s;
-    display: inline-block;
+  background: #ff7a2f;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(255, 122, 47, 0.35);
 }
 
 .admin-btn:hover {
-    background: var(--accent);
+  background: #e66820;
+  transform: translateY(-2px);
 }
 
 .settings-dropdown {
@@ -1129,4 +1133,78 @@ footer {
     .cart-sidebar { width: 100%; transform: translateX(110%); }
     .cart-page { width: 100%; border-radius: 12px 12px 0 0; max-height: 84vh }
     .footer-content { flex-direction: column; text-align: center; }
+}
+
+/* Checkout Premium Controls */
+
+.checkout-options{
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.option-group{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* Dropdown Styling */
+.styled-select{
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 2px solid #ff7a2f;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.styled-select:focus{
+    box-shadow: 0 0 8px rgba(255,122,47,0.4);
+}
+
+/* Radio Button Styling */
+.styled-radio{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 2px solid #ff7a2f;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.styled-radio input{
+    accent-color: #ff7a2f;
+}
+
+.styled-radio:hover{
+    background: rgba(255,122,47,0.12);
+}
+
+/* Done Button Premium */
+.done-btn{
+    width: 100%;
+    margin-top: 25px;
+    padding: 16px;
+    border: none;
+    border-radius: 35px;
+    background: #ff7a2f;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.done-btn:hover{
+    background: #e66820;
+    transform: translateY(-2px);
 }

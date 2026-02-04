@@ -10,7 +10,8 @@
     <div class="container">
         <h1>Order History</h1>
         <a href="/admin" class="admin-btn">Back to Dashboard</a>
-        <h2>Completed Orders Today</h2>
+        <a href="/admin/history/reset" class="admin-btn">Reset History</a>
+        <h2>{% if show_10_days %}Completed Orders Last 10 Days{% else %}Completed Orders Today{% endif %}</h2>
         <p>Cash Revenue: ₹{{ cash_revenue }}</p>
         <p>UPI Revenue: ₹{{ upi_revenue }}</p>
         <p>Total Revenue: ₹{{ total_revenue }}</p>
@@ -25,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for order in history %}
+                {% for order in orders %}
                 <tr>
                     <td>{{ order["id"] }}</td>
                     <td>{{ order["table"] }}</td>

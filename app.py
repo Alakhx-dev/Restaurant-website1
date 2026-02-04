@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 import random
 import string
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os
 import uuid
@@ -318,7 +318,52 @@ def admin_history():
     cash_total = sum(o['total'] for o in today_orders if o['payment_method'] == 'cash')
     upi_total = sum(o['total'] for o in today_orders if o['payment_method'] == 'upi')
     total_revenue = cash_total + upi_total
-    return render_template('admin_history.html', history=today_orders, total_revenue=total_revenue, cash_revenue=cash_total, upi_revenue=upi_total)
+    return render_template('admin_history.html', orders=today_orders, total_revenue=total_revenue, cash_revenue=cash_total, upi_revenue=upi_total, show_10_days=False)
+
+@app.route("/admin/history/reset")
+def reset_history():
+    history = load_json("data/history.json")
+    history = history if history else []
+    today = datetime.now().strftime("%Y-%m-%d")
+    # Remove ONLY today's orders
+    history = [
+        o for o in history
+        if not (o.get("date_time") and o["date_time"].startswith(today))
+    ]
+    # Save back remaining old history (last 10 days stays)
+    save_json("data/history.json", history)
+    return redirect(url_for("admin_history"))
+
+@app.route("/admin/history/10days")
+def history_10days():
+    history = load_json("data/history.json")
+
+    cutoff = datetime.now() - timedelta(days=10)
+
+    ten_days_orders = []
+    total_cash = 0
+    total_upi = 0
+
+    for o in history:
+        dt = o.get("date_time","")
+        if dt:
+            order_date = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+            if order_date >= cutoff:
+                ten_days_orders.append(o)
+
+                if o.get("payment") == "Cash":
+                    total_cash += o.get("total",0)
+                elif o.get("payment") == "UPI":
+                    total_upi += o.get("total",0)
+
+    return render_template(
+        "admin_history.html",
+        orders=ten_days_orders,
+        cash_revenue=total_cash,
+        upi_revenue=total_upi,
+        total_revenue=total_cash+total_upi,
+        show_10_days=True
+    )
 
 @app.route('/admin-logout')
 def admin_logout():
@@ -326,4 +371,4 @@ def admin_logout():
     return redirect(url_for('admin_login'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='127.0.0.1', debug=True)

@@ -26,32 +26,32 @@
                 </div>
             </div>
             <form action="/checkout" method="post" class="checkout-form">
-                <div class="form-group">
-                    <label for="table_no">Table Number:</label>
-                    <select name="table_no" id="table_no" required>
-                        {% for i in range(1, 11) %}
-                        <option value="{{ i }}">Table {{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="payment-options">
-                    <label>Payment Method:</label>
-                    <div class="payment-option" data-value="Cash">
-                        <input type="radio" name="payment" value="Cash" required>
-                        <label>Cash Payment</label>
-                        <span class="checkmark">✓</span>
+                <div class="checkout-options">
+                    <div class="option-group">
+                        <label>Table Number</label>
+                        <select name="table" class="styled-select" required>
+                            {% for i in range(1, 11) %}
+                            <option value="{{ i }}">Table {{ i }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="payment-option" data-value="UPI">
-                        <input type="radio" name="payment" value="UPI" required>
-                        <label>UPI Payment</label>
-                        <span class="checkmark">✓</span>
+                    <div class="option-group">
+                        <label>Payment Method</label>
+                        <label class="styled-radio">
+                            <input type="radio" name="payment" value="Cash" required>
+                            <span>Cash</span>
+                        </label>
+                        <label class="styled-radio">
+                            <input type="radio" name="payment" value="UPI">
+                            <span>UPI</span>
+                        </label>
                     </div>
                 </div>
                 <div id="qr-code" style="display: none;">
                     <img src="{{ url_for('static', filename='images/Qr.jpeg') }}" alt="UPI QR Code" onerror="this.style.display='none'; document.getElementById('qr-placeholder').style.display='block';">
                     <p id="qr-placeholder" style="display: none;">QR Code placeholder - replace with actual UPI QR code image.</p>
                 </div>
-                <button type="submit" class="confirm-payment-btn">Confirm Payment</button>
+                <button type="submit" class="done-btn">Done</button>
             </form>
         </div>
     </div>
