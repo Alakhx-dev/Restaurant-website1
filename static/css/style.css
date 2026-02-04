@@ -118,6 +118,23 @@ header {
   transform: translateY(-2px);
 }
 
+.logout-btn {
+    background: #ff7a2f;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background: #e66820;
+    transform: scale(1.05);
+}
+
 .settings-dropdown {
     position: relative;
     display: inline-block;
