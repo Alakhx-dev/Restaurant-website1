@@ -79,7 +79,8 @@ Restaurant-website1
 │ └── images
 └── templates
 
-#**How to Run This Project on Your Computer**
+## How to Run This Project on Your Computer
+
 
 **STEP 1: Download the Project**<br>
 
@@ -101,7 +102,7 @@ For Mac / Linux:<br>
 
 <u>source .venv/bin/activate</u>
 
-S**TEP 4: Install Required Packages**<br>
+**STEP 4: Install Required Packages**<br>
 
 <u>pip install -r requirements.txt</u>
 
