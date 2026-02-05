@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Admin Dashboard</h1>
-        <a href="/admin-logout" class="admin-btn logout-btn">Logout</a>
+        <a href="{{ url_for('admin_logout') }}" class="admin-btn logout-btn">Logout</a>
         <a href="/admin/history" class="admin-btn">View Order History</a>
         <h2>Active Orders</h2>
         <table>

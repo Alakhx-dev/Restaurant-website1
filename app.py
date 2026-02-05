@@ -415,7 +415,7 @@ def history_10days():
 @app.route('/admin-logout')
 def admin_logout():
     session.pop('admin', None)
-    return redirect(url_for('admin_login'))
+    return redirect(url_for('login_page'))
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', debug=True)
