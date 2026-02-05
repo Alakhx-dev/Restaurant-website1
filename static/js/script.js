@@ -1,4 +1,183 @@
+const translations = {
+    en: {
+        nav_menu: "Menu",
+        nav_about: "About Us",
+        nav_contact: "Contact Us",
+        settings: "Settings ▼",
+        language: "Language",
+        logout: "Logout",
+        hero_title: "Delicious Food Delivered Fresh",
+        hero_subtitle: "Experience authentic flavors crafted with love and tradition.",
+        cta_explore: "Explore Menu",
+        cat_breakfast: "Breakfast",
+        cat_lunch: "Lunch",
+        cat_beverages: "Beverages",
+        cat_dinner: "Dinner",
+        welcome: "Welcome",
+        add_plus: "Add +",
+        checkout_title: "Checkout",
+        your_order: "Your Order",
+        total_label: "Total",
+        table_number: "Table Number:",
+        payment_method: "Payment Method:",
+        done: "Done",
+        your_cart: "Your Cart",
+        order_summary: "Order Summary",
+        dish: "Dish",
+        subtotal: "Subtotal",
+        shipping: "Shipping",
+        free: "Free",
+        tax: "Tax",
+        secure_checkout: "Secure Checkout",
+        order_success: "Order Successfully Placed!",
+        order_id: "Order ID",
+        download_bill: "Download Bill"
+    },
+    hi: {
+        nav_menu: "मेनू",
+        nav_about: "हमारे बारे में",
+        nav_contact: "संपर्क करें",
+        settings: "सेटिंग्स ▼",
+        language: "भाषा",
+        logout: "लॉगआउट",
+        hero_title: "स्वादिष्ट भोजन ताज़ा परोसा जाता है",
+        hero_subtitle: "पारंपरिक स्वाद और प्यार से बनी रेसिपी का आनंद लें।",
+        cta_explore: "मेनू देखें",
+        cat_breakfast: "नाश्ता",
+        cat_lunch: "दोपहर का भोजन",
+        cat_beverages: "पेय",
+        cat_dinner: "रात का भोजन",
+        welcome: "स्वागत",
+        add_plus: "जोड़ें +",
+        checkout_title: "चेकआउट",
+        your_order: "आपका ऑर्डर",
+        total_label: "कुल",
+        table_number: "टेबल नंबर:",
+        payment_method: "भुगतान विधि:",
+        done: "पूर्ण",
+        your_cart: "आपकी कार्ट",
+        order_summary: "ऑर्डर सारांश",
+        dish: "डिश",
+        subtotal: "उप-योग",
+        shipping: "डिलीवरी",
+        free: "मुफ्त",
+        tax: "कर",
+        secure_checkout: "सुरक्षित चेकआउट",
+        order_success: "ऑर्डर सफलतापूर्वक हो गया!",
+        order_id: "ऑर्डर आईडी",
+        download_bill: "बिल डाउनलोड करें"
+    },
+    mr: {
+        nav_menu: "मेनू",
+        nav_about: "आमच्याबद्दल",
+        nav_contact: "संपर्क",
+        settings: "सेटिंग्ज ▼",
+        language: "भाषा",
+        logout: "लॉगआउट",
+        hero_title: "ताजे आणि चविष्ट पदार्थ",
+        hero_subtitle: "प्रेम आणि परंपरेने तयार केलेले खास स्वाद.",
+        cta_explore: "मेनू पहा",
+        cat_breakfast: "नाश्ता",
+        cat_lunch: "दुपारचे जेवण",
+        cat_beverages: "पेय",
+        cat_dinner: "रात्रीचे जेवण",
+        welcome: "स्वागत",
+        add_plus: "जोडा +",
+        checkout_title: "चेकआउट",
+        your_order: "तुमची ऑर्डर",
+        total_label: "एकूण",
+        table_number: "टेबल क्रमांक:",
+        payment_method: "पेमेंट पद्धत:",
+        done: "पूर्ण",
+        your_cart: "तुमची कार्ट",
+        order_summary: "ऑर्डर सारांश",
+        dish: "डिश",
+        subtotal: "उप-एकूण",
+        shipping: "डिलिव्हरी",
+        free: "मोफत",
+        tax: "कर",
+        secure_checkout: "सुरक्षित चेकआउट",
+        order_success: "ऑर्डर यशस्वी!",
+        order_id: "ऑर्डर आयडी",
+        download_bill: "बिल डाउनलोड करा"
+    }
+};
+
+function getCurrentLanguage() {
+    return localStorage.getItem('language') || 'en';
+}
+
+function applyTranslations(lang) {
+    const strings = translations[lang] || translations.en;
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (strings[key]) {
+            el.textContent = strings[key];
+        }
+    });
+
+    document.querySelectorAll('input[name="language"]').forEach(input => {
+        input.value = lang;
+    });
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+}
+
+function changeLanguage(lang) {
+    localStorage.setItem('language', lang);
+    applyTranslations(lang);
+}
+
+function t(key) {
+    const lang = getCurrentLanguage();
+    if (translations[lang] && translations[lang][key]) {
+        return translations[lang][key];
+    }
+    return (translations.en && translations.en[key]) ? translations.en[key] : key;
+}
+
+function setupLanguageMenu() {
+    const languageDropdown = document.getElementById('language-dropdown');
+    const languageTrigger = document.getElementById('language-trigger');
+    const settingsMenu = document.getElementById('settings-menu');
+
+    if (languageTrigger && languageDropdown) {
+        languageTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            languageDropdown.classList.toggle('open');
+        });
+    }
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            changeLanguage(this.getAttribute('data-lang'));
+            if (languageDropdown) {
+                languageDropdown.classList.remove('open');
+            }
+        });
+    });
+
+    if (settingsMenu) {
+        settingsMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+
+    document.addEventListener('click', function() {
+        if (languageDropdown) {
+            languageDropdown.classList.remove('open');
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    applyTranslations(getCurrentLanguage());
+    setupLanguageMenu();
     loadCart();
     setupCategoryFilters();
     setupCTAButton();
@@ -143,7 +322,7 @@ function loadCart() {
                 <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                 <div class="cart-item-details">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-category">Dish</div>
+                    <div class="cart-item-category">${t('dish')}</div>
                     <div class="quantity-controls">
                         <button class="quantity-btn" onclick="changeQuantity('${item.name}', -1)">-</button>
                         <span class="quantity-display">${item.quantity}</span>
@@ -229,6 +408,7 @@ function proceedToCheckout() {
         const checkoutTotal = document.getElementById('checkout-total');
         const cartData = document.getElementById('cart-data');
         const totalData = document.getElementById('total-data');
+        const languageField = document.getElementById('language-field');
         checkoutCartList.innerHTML = '';
         let total = 0;
         cart.forEach(item => {
@@ -240,6 +420,9 @@ function proceedToCheckout() {
         checkoutTotal.textContent = total;
         cartData.value = JSON.stringify(cart);
         totalData.value = total;
+        if (languageField) {
+            languageField.value = getCurrentLanguage();
+        }
     });
 }
 
@@ -252,6 +435,7 @@ function submitOrder() {
     const totalDataEl = document.getElementById('total-data');
     const cartData = cartDataEl ? cartDataEl.value : null;
     const totalData = totalDataEl ? totalDataEl.value : null;
+    const language = getCurrentLanguage();
 
     if (!tableNo || !payment || !cartData || !totalData) {
         alert('Please fill all fields');
@@ -262,7 +446,8 @@ function submitOrder() {
         cart: JSON.parse(cartData),
         total: parseFloat(totalData),
         table: tableNo,
-        payment: payment
+        payment: payment,
+        language: language
     };
 
     fetch('/place_order', {

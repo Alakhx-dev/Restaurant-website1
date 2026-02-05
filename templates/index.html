@@ -17,13 +17,21 @@
                 </div>
             </div>
             <nav class="main-nav">
-                <a href="/menu">Menu</a>
-                <a href="/about">About Us</a>
-                <a href="/contact">Contact Us</a>
+                <a href="/menu" data-i18n="nav_menu">Menu</a>
+                <a href="/about" data-i18n="nav_about">About Us</a>
+                <a href="/contact" data-i18n="nav_contact">Contact Us</a>
                 <div class="settings-dropdown">
-                    <button class="settings-btn">Settings ⬇️</button>
-                    <div class="dropdown-menu">
-                        <a href="/logout">Logout</a>
+                    <button class="settings-btn" type="button" id="settings-btn" data-i18n="settings">Settings ▼</button>
+                    <div class="dropdown-menu" id="settings-menu">
+                        <div class="dropdown-item has-submenu" id="language-dropdown">
+                            <button class="submenu-trigger" type="button" id="language-trigger" data-i18n="language">Language</button>
+                            <div class="submenu" id="language-menu" aria-label="Language">
+                                <button type="button" class="lang-option" data-lang="en">English</button>
+                                <button type="button" class="lang-option" data-lang="hi">Hindi</button>
+                                <button type="button" class="lang-option" data-lang="mr">Marathi</button>
+                            </div>
+                        </div>
+                        <a href="/logout" data-i18n="logout">Logout</a>
                     </div>
                 </div>
             </nav>
@@ -37,9 +45,9 @@
         <section class="hero">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Delicious Food Delivered Fresh</h1>
-                    <p>Experience authentic flavors crafted with love and tradition.</p>
-                    <button class="cta-button">Explore Menu</button>
+                    <h1 data-i18n="hero_title">Delicious Food Delivered Fresh</h1>
+                    <p data-i18n="hero_subtitle">Experience authentic flavors crafted with love and tradition.</p>
+                    <button class="cta-button" data-i18n="cta_explore">Explore Menu</button>
                 </div>
                 <div class="hero-image">
                     <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop" alt="Delicious Food">
@@ -54,21 +62,21 @@
                     <ellipse cx="12" cy="12" rx="7" ry="5.5" stroke="currentColor" stroke-width="1.4" fill="none" />
                     <ellipse cx="12" cy="11.5" rx="3" ry="2" fill="currentColor" opacity="0.15" />
                 </svg>
-                <span class="category-label">Breakfast</span>
+                <span class="category-label" data-i18n="cat_breakfast">Breakfast</span>
             </div>
             <div class="category-icon" data-category="LUNCH">
                 <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M3 13c2 3 6 4 9 4s7-1 9-4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
                     <path d="M6 11v-2a2 2 0 012-2h8a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
                 </svg>
-                <span class="category-label">Lunch</span>
+                <span class="category-label" data-i18n="cat_lunch">Lunch</span>
             </div>
             <div class="category-icon" data-category="BEVERAGES">
                 <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M6 4h12l-1 12a3 3 0 01-3 3H10a3 3 0 01-3-3L6 4z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M9 8h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
                 </svg>
-                <span class="category-label">Beverages</span>
+                <span class="category-label" data-i18n="cat_beverages">Beverages</span>
             </div>
             <div class="category-icon" data-category="DINNER">
                 <svg class="cat-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -76,11 +84,11 @@
                     <path d="M10 3v14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                     <path d="M16 6l4 3-4 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span class="category-label">Dinner</span>
+                <span class="category-label" data-i18n="cat_dinner">Dinner</span>
             </div>
         </div>
 
-<h2>Welcome, {{ user }}</h2>
+<h2><span data-i18n="welcome">Welcome</span>, {{ user }}</h2>
 {% for category in ['BREAKFAST', 'LUNCH', 'BEVERAGES', 'DINNER'] %}
 {% set items = menu[category] %}
 <div class="menu-category">
@@ -91,7 +99,7 @@
             <img src="{% if item.name == 'Mango Lassi' %}https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDrkRYgmdd0TE6Xxc_gwme42C8oFVxORXXOQ&s{% else %}{{ item.image }}{% endif %}" alt="{{ item.name }}">
             <h4>{{ item.name }}</h4>
             <p>₹{{ item.price }}</p>
-            <button class="add-btn" data-name="{{ item.name }}" data-price="{{ item.price }}">Add +</button>
+            <button class="add-btn" data-name="{{ item.name }}" data-price="{{ item.price }}" data-i18n="add_plus">Add +</button>
         </div>
         {% endfor %}
         {% if category == 'BEVERAGES' %}
@@ -99,19 +107,19 @@
             <img src="https://www.milkmaid.in/sites/default/files/2024-05/Cold-Coffee-335x300.jpg" alt="Cold Coffee">
             <h4>Cold Coffee</h4>
             <p>₹60</p>
-            <button class="add-btn" data-name="Cold Coffee" data-price="60">Add +</button>
+            <button class="add-btn" data-name="Cold Coffee" data-price="60" data-i18n="add_plus">Add +</button>
         </div>
         <div class="menu-card">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE2coco7HaGVd--V5BI0Ql1mD8hI1sJui-rw&s" alt="Sweet Lassi">
             <h4>Sweet Lassi</h4>
             <p>₹50</p>
-            <button class="add-btn" data-name="Sweet Lassi" data-price="50">Add +</button>
+            <button class="add-btn" data-name="Sweet Lassi" data-price="50" data-i18n="add_plus">Add +</button>
         </div>
         <div class="menu-card">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvQkXHbqVD1iOyLV-xkRw1H7QWiiqs5qfXbw&s" alt="Fresh Lemon Soda">
             <h4>Fresh Lemon Soda</h4>
             <p>₹40</p>
-            <button class="add-btn" data-name="Fresh Lemon Soda" data-price="40">Add +</button>
+            <button class="add-btn" data-name="Fresh Lemon Soda" data-price="40" data-i18n="add_plus">Add +</button>
         </div>
         {% endif %}
     </div>
@@ -120,19 +128,19 @@
     </div>
     <div class="checkout-section" id="checkout-section" style="display: none;">
         <div class="container">
-            <h1>Checkout</h1>
+            <h1 data-i18n="checkout_title">Checkout</h1>
             <div class="checkout-form">
-                <h2>Your Order</h2>
+                <h2 data-i18n="your_order">Your Order</h2>
                 <ul id="checkout-cart-list"></ul>
-                <p><strong>Total: ₹<span id="checkout-total">0</span></strong></p>
+                <p><strong><span data-i18n="total_label">Total</span>: ₹<span id="checkout-total">0</span></strong></p>
                 <form action="/checkout" method="post">
-                    <label for="table_no">Table Number:</label>
+                    <label for="table_no" data-i18n="table_number">Table Number:</label>
                     <select name="table_no" id="table_no" required>
                         {% for i in range(1, 11) %}
                         <option value="{{ i }}">Table {{ i }}</option>
                         {% endfor %}
                     </select>
-                    <label>Payment Method:</label>
+                    <label data-i18n="payment_method">Payment Method:</label>
                     <input type="radio" name="payment" value="Cash" required> Cash
                     <input type="radio" name="payment" value="UPI" required> UPI
                     <div id="qr-code" style="display: none;">
@@ -142,7 +150,8 @@
                     <!-- hidden inputs populated by JS when proceeding to checkout -->
                     <input type="hidden" id="cart-data" name="cart_data" value="">
                     <input type="hidden" id="total-data" name="total_data" value="">
-                    <button type="button" onclick="submitOrder()">Done</button>
+                    <input type="hidden" id="language-field" name="language" value="en">
+                    <button type="button" onclick="submitOrder()" data-i18n="done">Done</button>
                 </form>
             </div>
         </div>
@@ -151,17 +160,17 @@
         <div class="cart-page">
             <div class="cart-container">
                 <div class="cart-items-section">
-                    <h2>Your Cart</h2>
+                    <h2 data-i18n="your_cart">Your Cart</h2>
                     <div id="cart-list"></div>
                 </div>
                 <div class="cart-summary-section">
                     <div class="order-summary-card">
-                        <h2>Order Summary</h2>
-                        <div class="summary-line"><span>Subtotal</span><span id="subtotal">₹0</span></div>
-                        <div class="summary-line"><span>Shipping</span><span>Free</span></div>
-                        <div class="summary-line"><span>Tax</span><span id="tax">₹0</span></div>
-                        <div class="summary-line total-line"><span>Total</span><span id="total">₹0</span></div>
-                        <button id="checkout-btn" onclick="proceedToCheckout()" style="display: none;" class="checkout-btn">Secure Checkout</button>
+                        <h2 data-i18n="order_summary">Order Summary</h2>
+                        <div class="summary-line"><span data-i18n="subtotal">Subtotal</span><span id="subtotal">₹0</span></div>
+                        <div class="summary-line"><span data-i18n="shipping">Shipping</span><span data-i18n="free">Free</span></div>
+                        <div class="summary-line"><span data-i18n="tax">Tax</span><span id="tax">₹0</span></div>
+                        <div class="summary-line total-line"><span data-i18n="total_label">Total</span><span id="total">₹0</span></div>
+                        <button id="checkout-btn" onclick="proceedToCheckout()" style="display: none;" class="checkout-btn" data-i18n="secure_checkout">Secure Checkout</button>
                     </div>
                 </div>
             </div>
@@ -172,9 +181,9 @@
         <div class="success-modal-content" role="dialog" aria-modal="true" aria-labelledby="success-title">
             <button type="button" class="success-close" id="success-close" aria-label="Close">x</button>
             <div class="success-icon">✓</div>
-            <h3 id="success-title">Order Successfully Placed!</h3>
-            <p class="success-subtext">Order ID: <span id="success-order-id">--</span></p>
-            <button type="button" class="download-bill-btn" id="download-bill-btn">Download Bill</button>
+            <h3 id="success-title" data-i18n="order_success">Order Successfully Placed!</h3>
+            <p class="success-subtext"><span data-i18n="order_id">Order ID</span>: <span id="success-order-id">--</span></p>
+            <button type="button" class="download-bill-btn" id="download-bill-btn" data-i18n="download_bill">Download Bill</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>

@@ -174,9 +174,11 @@ def checkout():
             total = data['total']
             table_no = data['table_no']
             payment = data['payment']
+            language = data.get('language')
         else:
             table_no = request.form['table_no']
             payment = request.form['payment']
+            language = request.form.get('language')
             cart_data = request.form.get('cart_data')
             total_data = request.form.get('total_data')
             if cart_data and total_data:
@@ -193,6 +195,7 @@ def checkout():
             'total': total,
             'user': session['user'],
             'payment': payment,
+            'language': language,
             'date_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         orders = load_json('data/orders.json')
@@ -212,6 +215,7 @@ def place_order():
     total = data['total']
     table_no = data['table']
     payment = data['payment']
+    language = data.get('language')
     order_id = str(uuid.uuid4())[:8]
     order = {
         'id': order_id,
@@ -220,6 +224,7 @@ def place_order():
         'total': total,
         'user': session.get('user', 'Guest'),
         'payment': payment,
+        'language': language,
         'date_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
     session['order'] = order
@@ -418,4 +423,4 @@ def admin_logout():
     return redirect(url_for('login_page'))
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', debug=True)
+    app.run(host='0.0.0.0', debug=True)

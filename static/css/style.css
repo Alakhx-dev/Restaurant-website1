@@ -167,9 +167,11 @@ header {
     box-shadow: 0 8px 20px rgba(11,37,48,0.06);
     z-index: 1000;
     min-width: 120px;
+    padding: 6px;
 }
 
-.dropdown-menu a {
+.dropdown-menu a,
+.dropdown-menu button {
     display: block;
     padding: 10px 16px;
     color: var(--text-dark);
@@ -177,15 +179,52 @@ header {
     font-weight: 600;
     border-radius: 12px;
     transition: background 0.3s;
+    background: transparent;
+    border: none;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
-.dropdown-menu a:hover {
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
     background: var(--primary);
     color: white;
 }
 
 .settings-dropdown:hover .dropdown-menu {
     display: block;
+}
+
+.dropdown-item {
+    position: relative;
+}
+
+.submenu {
+    display: none;
+    margin-top: 6px;
+    background: #fff;
+    border: 1px solid rgba(255,122,47,0.2);
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 6px 16px rgba(11,37,48,0.05);
+}
+
+.dropdown-item.open .submenu {
+    display: block;
+}
+
+.lang-option {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.lang-option.active {
+    background: var(--primary);
+    color: #fff;
 }
 
 .container {
