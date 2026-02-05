@@ -87,6 +87,14 @@ header {
     right: -10px;
 }
 
+.main-nav a,
+.settings-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: normal;
+}
+
 .main-nav a {
     background: var(--primary);
     color: white;
@@ -150,7 +158,7 @@ header {
     transition: background 0.3s;
     border: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .settings-btn:hover {
