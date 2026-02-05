@@ -107,7 +107,7 @@ def login():
         return redirect(url_for('menu_page'))
     return 'Invalid credentials', 400
 
-@app.route('/guest')
+@app.route('/guest', methods=['GET', 'POST'])
 def guest():
     # Support GET redirect and POST JSON to create a guest with a name
     if request.method == 'POST' or request.is_json:

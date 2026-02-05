@@ -58,6 +58,19 @@
         </section>
     </main>
 
+    <div id="guest-modal" class="success-modal" aria-hidden="true">
+        <div class="success-modal-content" role="dialog" aria-modal="true" aria-labelledby="guest-title">
+            <button type="button" class="success-close" id="guest-close" aria-label="Close">×</button>
+            <h3 id="guest-title">Continue as Guest</h3>
+            <p class="success-subtext">Enter your name to start ordering.</p>
+            <form id="guest-form" class="form" novalidate>
+                <label for="guest-name">Guest Name</label>
+                <input id="guest-name" type="text" name="guest_name" placeholder="e.g. Alex" required>
+                <button id="guest-done" type="submit" class="btn primary">Done</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Tab switching
         (function(){
@@ -88,25 +101,73 @@
                     else { input.type = 'password'; this.textContent = 'Show'; }
                 });
             });
-            // Guest login flow: prompt for name then POST to /guest
+            // Guest login flow: modal for name then POST to /guest
             const guestBtn = document.getElementById('guest-btn');
+            const guestModal = document.getElementById('guest-modal');
+            const guestInput = document.getElementById('guest-name');
+            const guestForm = document.getElementById('guest-form');
+            const guestClose = document.getElementById('guest-close');
+
+            function openGuestModal() {
+                if (!guestModal) return;
+                guestModal.classList.add('active');
+                guestModal.setAttribute('aria-hidden', 'false');
+                if (guestInput) {
+                    guestInput.value = '';
+                    guestInput.focus();
+                }
+            }
+
+            function closeGuestModal() {
+                if (!guestModal) return;
+                guestModal.classList.remove('active');
+                guestModal.setAttribute('aria-hidden', 'true');
+            }
+
             if (guestBtn) {
-                guestBtn.addEventListener('click', function(){
-                    const name = prompt('Enter name for guest (or leave blank for auto-generated):');
+                guestBtn.addEventListener('click', openGuestModal);
+            }
+
+            if (guestClose) {
+                guestClose.addEventListener('click', closeGuestModal);
+            }
+
+            if (guestModal) {
+                guestModal.addEventListener('click', function (e) {
+                    if (e.target === guestModal) closeGuestModal();
+                });
+            }
+
+            if (guestForm) {
+                guestForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const name = (guestInput && guestInput.value || '').trim();
+                    const doneBtn = document.getElementById('guest-done');
+                    if (doneBtn) doneBtn.disabled = true;
                     fetch('/guest', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name: name })
                     })
-                    .then(r => r.json())
-                    .then(resp => {
-                        if (resp && resp.redirect) {
-                            window.location.href = resp.redirect;
-                        } else {
+                        .then(r => r.json())
+                        .then(resp => {
+                            if (resp && resp.user) {
+                                localStorage.setItem('guestName', resp.user);
+                            } else {
+                                localStorage.setItem('guestName', name);
+                            }
+                            closeGuestModal();
+                            window.location.href = (resp && resp.redirect) ? resp.redirect : '/menu';
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            localStorage.setItem('guestName', name);
+                            closeGuestModal();
                             window.location.href = '/menu';
-                        }
-                    })
-                    .catch(err => { console.error(err); window.location.href = '/menu'; });
+                        })
+                        .finally(() => {
+                            if (doneBtn) doneBtn.disabled = false;
+                        });
                 });
             }
         })();
