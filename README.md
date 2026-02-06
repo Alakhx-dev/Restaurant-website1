@@ -108,6 +108,7 @@ For Mac / Linux:<br>
 
 **STEP 5: Run the Website**<br>
 
+
 <u>python app.py</u>
 
 Open this link in your browser
