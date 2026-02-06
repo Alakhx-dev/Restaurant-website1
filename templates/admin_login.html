@@ -15,6 +15,9 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             <button type="submit">Login</button>
+            {% if can_signup %}
+            <button type="button" onclick="window.location.href='/admin-register'">Signup</button>
+            {% endif %}
         </form>
     </div>
 </body>

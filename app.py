@@ -54,6 +54,21 @@ def save_json(file, data):
     with open(file, 'w') as f:
         json.dump(data, f, indent=4)
 
+def load_admin_credentials():
+    admin_file = 'data/admin.json'
+    if not os.path.exists(admin_file):
+        return None
+    try:
+        if os.path.getsize(admin_file) == 0:
+            return None
+        with open(admin_file, 'r') as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return None
+    if isinstance(data, dict) and data.get('username') and data.get('password'):
+        return data
+    return None
+
 # Load data
 completed_orders = load_json('data/history.json')
 
@@ -302,7 +317,8 @@ def contact():
 @app.route('/admin-register', methods=['GET', 'POST'])
 def admin_register():
     admin_file = 'data/admin.json'
-    if os.path.exists(admin_file):
+    existing_admin = load_admin_credentials()
+    if existing_admin:
         return redirect(url_for('admin_login'))
     if request.method == 'POST':
         username = request.form['username']
@@ -315,17 +331,18 @@ def admin_register():
 @app.route('/admin-login', methods=['GET', 'POST'])
 def admin_login():
     admin_file = 'data/admin.json'
-    if not os.path.exists(admin_file):
-        return redirect(url_for('admin_register'))
+    admin_data = load_admin_credentials()
+    can_signup = admin_data is None
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        admin_data = load_json(admin_file)
+        if not admin_data:
+            return redirect(url_for('admin_register'))
         if admin_data.get('username') == username and admin_data.get('password') == password:
             session['admin'] = True
             return redirect(url_for('admin_dashboard'))
         return 'Invalid credentials', 400
-    return render_template('admin_login.html')
+    return render_template('admin_login.html', can_signup=can_signup)
 
 @app.route('/admin')
 def admin_dashboard():
